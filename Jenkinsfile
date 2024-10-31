@@ -73,7 +73,7 @@ pipeline {
         stage('Build Docker App image') {
             steps {
                 script {
-                    dockerImage = docker.build('$DOCKER_IMAGE')
+                    dockerImage = docker.build "$DOCKER_IMAGE"
                 }
             }
         }
