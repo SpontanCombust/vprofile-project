@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven "maven3"
+    }
+
     environment {
         ECR_REGISTRY = credentials('ecr-registry')
         ECR_REPOSITORY = credentials('ecr-repository')
