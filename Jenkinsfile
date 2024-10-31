@@ -4,7 +4,7 @@ pipeline {
     environment {
         ECR_REGISTRY = credentials('ecr-registry')
         ECR_REPOSITORY = credentials('ecr-repository')
-        DOCKER_IMAGE = "${ECR_REGISTRY}/${ECR_REPOSITORY}:V${BUILD_NUMBER}"
+        DOCKER_IMAGE = '$ECR_REGISTRY/$ECR_REPOSITORY:V$BUILD_NUMBER'
     }
 
     stages{
@@ -69,7 +69,7 @@ pipeline {
         stage('Build Docker App image') {
             steps {
                 script {
-                    dockerImage = docker.build("V${DOCKER_IMAGE}")
+                    dockerImage = docker.build('V$DOCKER_IMAGE')
                 }
             }
         }
@@ -77,8 +77,8 @@ pipeline {
         stage('Upload image') {
             steps {
                 script {
-                    docker.withRegistry("${ECR_REGISTRY}", "ecr:us-east-1:aws-creds") {
-                        dockerImage.push("V${BUILD_NUMBER}")
+                    docker.withRegistry('$ECR_REGISTRY', 'ecr:us-east-1:aws-creds') {
+                        dockerImage.push('V$BUILD_NUMBER')
                         dockerImage.push("latest")
                     }
                 }
@@ -87,7 +87,7 @@ pipeline {
 
         stage("Remove unused Docker images") {
             steps {
-                sh "docker rmi ${DOCKER_IMAGE}"
+                sh 'docker rmi $DOCKER_IMAGE'
             }
         }
 
@@ -97,7 +97,7 @@ pipeline {
         //     }
 
         //     steps {
-        //         sh 'helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${DOCKER_IMAGE} --namespace prod'
+        //         sh 'helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=$DOCKER_IMAGE --namespace prod'
         //     }
         // }
     }
